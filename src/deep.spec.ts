@@ -21,7 +21,7 @@ test('find cars', async ({ page }) => {
       const title = (await carElement.locator('.ticket-title').allInnerTexts()).toString();
       const price = parseInt((await carElement.locator('[data-currency="USD"]').allInnerTexts()).toString().replace(/ /g,''));
       const url = (await carElement.locator('.m-link-ticket').getAttribute('href')) || 'undefined';
-      const hash = crypto.createHash('md5').update(url).digest('hex');
+      const hash = btoa(url);
 
       const car = {
         title,
