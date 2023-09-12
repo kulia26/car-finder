@@ -11,23 +11,24 @@ const getCarsListPageUrl = (page = 0) => {
 test('find cars', async ({ page }) => {
   await page.goto(getCarsListPageUrl(), { waitUntil: 'networkidle' });
   const resultsCount = parseInt((await page.locator('#staticResultsCount').allInnerTexts()).toString().replace(/ /g,''));
-  const pagesCount = Math.round(resultsCount / 100); 
+  const pagesCount = Math.floor(resultsCount / 100); 
 
-  for (let i = 0; i < pagesCount - 1; i++) {
-    await page.goto(getCarsListPageUrl(i), { waitUntil: 'domcontentloaded' });
+  for (let i = 0; i <= pagesCount; i++) {
+    await page.goto(getCarsListPageUrl(i), { waitUntil: 'networkidle' });
     const cars = await page.locator('.ticket-item').all();
 
-    const carsItems = await Promise.all(cars.map(async carElement => {
+    await Promise.all(cars.map(async carElement => {
       const title = (await carElement.locator('.ticket-title').allInnerTexts()).toString();
       const price = parseInt((await carElement.locator('[data-currency="USD"]').allInnerTexts()).toString().replace(/ /g,''));
       const url = (await carElement.locator('.m-link-ticket').getAttribute('href')) || 'undefined';
-      const hash = btoa(url);
-
+      const id =  (await carElement.getAttribute('data-advertisement-id')); 
+      const userId =  (await carElement.getAttribute('data-user-id'));
+      const hash = `${id}u${userId}`;
       const car = {
         title,
         price,
         url,
-        hash
+        hash,
       }
 
         await axios({
@@ -36,7 +37,6 @@ test('find cars', async ({ page }) => {
           data: car,
         });
       
-      return car;
     }));
 
   }
