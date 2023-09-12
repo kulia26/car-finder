@@ -1,0 +1,30 @@
+name: Find Card
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: "*/7 16-18 * * *"
+  #   - cron: "*/7 11-16 * * *"
+  #   - cron: "*/6 4-11 * * *"
+jobs:
+  find:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: pnpm/action-setup@v2
+      name: Install pnpm
+      id: pnpm-install
+      with:
+        version: 8
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: 'pnpm'
+    - name: Install dependencies
+      run: pnpm install
+    - name: Install Playwright Browsers
+      run: pnpm exec playwright install --with-deps chromium
+    - name: Run Playwright - find cars
+      env: 
+        WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+      run: pnpm exec playwright test deep.spec.ts

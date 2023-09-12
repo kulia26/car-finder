@@ -11,7 +11,7 @@ const getCarsListPageUrl = (page = 0) => {
 test('find cars', async ({ page }) => {
   await page.goto(getCarsListPageUrl(), { waitUntil: 'networkidle' });
   const resultsCount = parseInt((await page.locator('#staticResultsCount').allInnerTexts()).toString().replace(/ /g,''));
-  const pagesCount = Math.round(resultsCount / 100);  
+  const pagesCount = Math.round(resultsCount / 100); 
 
   for (let i = 0; i < pagesCount - 1; i++) {
     await page.goto(getCarsListPageUrl(i), { waitUntil: 'domcontentloaded' });
@@ -21,15 +21,21 @@ test('find cars', async ({ page }) => {
       const title = (await carElement.locator('.ticket-title').allInnerTexts()).toString();
       const price = parseInt((await carElement.locator('[data-currency="USD"]').allInnerTexts()).toString().replace(/ /g,''));
       const url = (await carElement.locator('.m-link-ticket').getAttribute('href')) || 'undefined';
-      const name = crypto.createHash('md5').update(url).digest('hex');
+      const hash = crypto.createHash('md5').update(url).digest('hex');
 
       const car = {
         title,
         price,
         url,
-        name
+        hash
       }
-  
+
+        await axios({
+          method: 'post',
+          url: `${process.env.WEBHOOK_URL}`,
+          data: car,
+        });
+      
       return car;
     }));
 
