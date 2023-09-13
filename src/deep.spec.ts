@@ -19,6 +19,8 @@ test('find cars', async ({ page }) => {
     await page.goto(getCarsListPageUrl(i), { waitUntil: 'networkidle' });
     const cars = await page.locator('.ticket-item').all();
 
+    console.log(`page: ${i} of ${pagesCount} ...`);
+
     await Promise.all(cars.map(async carElement => {
       const title = (await carElement.locator('.ticket-title').allInnerTexts()).toString();
       const price = parseInt((await carElement.locator('[data-currency="USD"]').allInnerTexts()).toString().replace(/ /g,''));
@@ -38,8 +40,6 @@ test('find cars', async ({ page }) => {
         url: `${process.env.WEBHOOK_URL}`,
         data: car,
       }));
-
-      console.log(`page: ${i} of ${pagesCount} ...`);
       
       return Promise.resolve();
       
