@@ -32,20 +32,26 @@ test('find cars', async ({ page }) => {
         url,
         hash,
       };
-      
+
       promises.push(axios({
         method: 'post',
         url: `${process.env.WEBHOOK_URL}`,
         data: car,
       }));
 
+      console.log(`page: ${i} of ${pagesCount} ...`);
+      
       return Promise.resolve();
       
     }));
 
   }
 
-  await Promise.all(promises)
+  console.log(`send to server start ` + new Date().toTimeString());
+
+  await Promise.all(promises);
+
+  console.log(`send to server finish ` + new Date().toTimeString());
 
   await page.close();
   
