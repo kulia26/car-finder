@@ -61,11 +61,11 @@ test("find cars", async ({ page }) => {
     );
   }
 
-  console.log(`send to server start ` + new Date().toTimeString());
+  console.time("sendToServer");
 
   await Promise.allSettled(promises);
 
-  console.log(`send to server finish ` + new Date().toTimeString());
+  console.timeEnd("sendToServer");
 
   await page.close();
 
