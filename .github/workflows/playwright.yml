@@ -2,7 +2,7 @@ name: Find Card
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/45 5-19 * * *"
+    - cron: "11 5-19 * * *"
 jobs:
   find:
     timeout-minutes: 29
