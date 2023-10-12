@@ -9,6 +9,13 @@ const getCarsListPageUrl = (page = 0) => {
   return `https://auto.ria.com/uk/search/?indexName=auto,order_auto,newauto_search&categories.main.id=1&country.import.usa.not=-1&region.id[0]=10&price.USD.lte=5000&price.currency=1&abroad.not=0&custom.not=1&page=${page}&size=100`;
 };
 
+interface Car {
+  title: string;
+  price: number;
+  url: string;
+  hash: string;
+}
+
 test('find cars', async ({ page }) => {
   const promises: Array<Promise<any>> = [];
 
@@ -21,6 +28,7 @@ test('find cars', async ({ page }) => {
   const pagesCount = Math.floor(resultsCount / 100);
 
   for (let i = 0; i <= pagesCount; i++) {
+    const carsToSend: Array<Car> = [];
     await page.goto(getCarsListPageUrl(i), { waitUntil: 'networkidle' });
     const cars = await page.locator('.ticket-item').all();
 
@@ -51,16 +59,20 @@ test('find cars', async ({ page }) => {
             hash,
           };
 
-          promises.push(
-            axios({
-              method: 'post',
-              url: `${process.env.WEBHOOK_URL}`,
-              data: car,
-            }),
-          );
+          carsToSend.push(car);
         }
 
         return Promise.resolve();
+      }),
+    );
+
+    promises.push(
+      axios({
+        method: 'post',
+        url: `${process.env.WEBHOOK_URL}`,
+        data: {
+          cars: [...carsToSend],
+        },
       }),
     );
   }
