@@ -36,26 +36,29 @@ test('find cars', async ({ page }) => {
             .toString()
             .replace(/ /g, ''),
         );
-        const url =
-          (await carElement.locator('.m-link-ticket').getAttribute('href')) ||
-          'undefined';
+        const url = await carElement
+          .locator('.m-link-ticket')
+          .getAttribute('href');
         const id = await carElement.getAttribute('data-advertisement-id');
         const userId = await carElement.getAttribute('data-user-id');
         const hash = `${id}u${userId}`;
-        const car = {
-          title,
-          price,
-          url,
-          hash,
-        };
 
-        promises.push(
-          axios({
-            method: "post",
-            url: `${process.env.WEBHOOK_URL}`,
-            data: car,
-          }),
-        );
+        if (url && id && userId && hash) {
+          const car = {
+            title,
+            price,
+            url,
+            hash,
+          };
+
+          promises.push(
+            axios({
+              method: 'post',
+              url: `${process.env.WEBHOOK_URL}`,
+              data: car,
+            }),
+          );
+        }
 
         return Promise.resolve();
       }),
