@@ -5,7 +5,7 @@ on:
     - cron: "11 5-19 * * *"
 jobs:
   find:
-    timeout-minutes: 29
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -16,13 +16,13 @@ jobs:
         version: 8
     - uses: actions/setup-node@v3
       with:
-        node-version: 18
+        node-version: 20
         cache: 'pnpm'
     - name: Install dependencies
       run: pnpm install
     - name: Install Playwright Browsers
       run: pnpm exec playwright install --with-deps chromium
     - name: Run Playwright - find cars
-      env: 
+      env:
         WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
       run: pnpm exec playwright test deep.spec.ts
