@@ -2,10 +2,10 @@ name: Find Card
 on:
   workflow_dispatch:
   schedule:
-    - cron: "11 5,8,11,14,19 * * *"
+    - cron: "11 6,13,19 * * *"
 jobs:
   find:
-    timeout-minutes: 30
+    timeout-minutes: 40
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
