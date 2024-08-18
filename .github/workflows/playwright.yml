@@ -25,4 +25,28 @@ jobs:
     - name: Run Playwright - find cars
       env:
         WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+        VERSION: v1
       run: pnpm exec playwright test deep.spec.ts
+  findAll:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Run Playwright - find cars
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          VERSION: v2
+        run: pnpm exec playwright test deep.spec.ts

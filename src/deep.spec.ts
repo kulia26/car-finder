@@ -1,12 +1,18 @@
 import { test } from '@playwright/test';
 import axios from 'axios';
-import { Telegraf } from 'telegraf';
-import crypto from 'crypto';
-import { writeFile } from 'fs/promises';
 require('dotenv').config();
 
-const getCarsListPageUrl = (page = 0) => {
+const VERSION = process.env.VERSION || 'v1';
+console.log('Starting version: ', VERSION);
+const getUrlV1 = (page = 0) => {
   return `https://auto.ria.com/uk/search/?indexName=auto,order_auto,newauto_search&categories.main.id=1&country.import.usa.not=-1&region.id[0]=10&price.USD.lte=8000&price.currency=1&abroad.not=0&custom.not=1&page=${page}&size=100`;
+};
+
+const getUrlV2 = (page = 0) => {
+  return `https://auto.ria.com/uk/search/?indexName=auto,order_auto,newauto_search&country.import.usa.not=-1&region.id[0]=2&region.id[1]=6&region.id[2]=24&region.id[3]=20&region.id[4]=1&price.USD.gte=2500&price.USD.lte=10000&price.currency=1&abroad.not=0&custom.not=1&page=${page}&size=100`;
+};
+const getCarsListPageUrl = (page = 0) => {
+  return VERSION === 'v1' ? getUrlV1(page) : getUrlV2(page);
 };
 
 interface Car {
@@ -14,6 +20,7 @@ interface Car {
   price: number;
   url: string;
   hash: string;
+  version: string;
 }
 
 test('find cars', async ({ page }) => {
@@ -49,6 +56,15 @@ test('find cars', async ({ page }) => {
           .getAttribute('href');
         const id = await carElement.getAttribute('data-advertisement-id');
         const userId = await carElement.getAttribute('data-user-id');
+        const city = (await carElement.locator('.view-location').innerText())
+          .toString()
+          .replace(/ /g, '');
+        const transmission = (
+          await carElement.locator('li.item-char:last-child').innerText()
+        )
+          .toString()
+          .replace(/ /g, '');
+
         const hash = `${id}u${userId}`;
 
         if (url && id && userId && hash) {
@@ -57,7 +73,12 @@ test('find cars', async ({ page }) => {
             price,
             url,
             hash,
+            version: VERSION,
+            city,
+            transmission,
           };
+
+          console.log(car);
 
           carsToSend.push(car);
         }
