@@ -78,8 +78,6 @@ test('find cars', async ({ page }) => {
             transmission,
           };
 
-          console.log(car);
-
           carsToSend.push(car);
         }
 
