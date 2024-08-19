@@ -27,7 +27,7 @@ interface Car {
 test('find cars', async ({ page }) => {
   const promises: Array<Promise<any>> = [];
 
-  await page.goto(getCarsListPageUrl());
+  await page.goto(getCarsListPageUrl(), { waitUntil: 'networkidle' });
   const resultsCount = parseInt(
     (await page.locator('#staticResultsCount').allInnerTexts())
       .toString()
@@ -39,7 +39,7 @@ test('find cars', async ({ page }) => {
 
   for (let i = INSTANCE === -1 ? 0 : INSTANCE; i <= pagesCount; i = i + step) {
     const carsToSend: Array<Car> = [];
-    await page.goto(getCarsListPageUrl(i));
+    await page.goto(getCarsListPageUrl(i), { waitUntil: 'networkidle' });
     const cars = await page.locator('.ticket-item').all();
 
     console.log(`page: ${i} of ${pagesCount} ...`);
