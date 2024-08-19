@@ -3,6 +3,7 @@ import axios from 'axios';
 require('dotenv').config();
 
 const VERSION = process.env.VERSION || 'v1';
+const INSTANCE = parseInt(process.env.INSTANCE || '-1');
 console.log('Starting version: ', VERSION);
 const getUrlV1 = (page = 0) => {
   return `https://auto.ria.com/uk/search/?indexName=auto,order_auto,newauto_search&categories.main.id=1&country.import.usa.not=-1&region.id[0]=10&price.USD.lte=8000&price.currency=1&abroad.not=0&custom.not=1&page=${page}&size=100`;
@@ -34,7 +35,9 @@ test('find cars', async ({ page }) => {
   );
   const pagesCount = Math.floor(resultsCount / 100);
 
-  for (let i = 0; i <= pagesCount; i++) {
+  const step = INSTANCE === -1 ? 1 : 4;
+
+  for (let i = INSTANCE; i <= pagesCount; i = i + step) {
     const carsToSend: Array<Car> = [];
     await page.goto(getCarsListPageUrl(i));
     const cars = await page.locator('.ticket-item').all();

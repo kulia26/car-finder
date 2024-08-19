@@ -28,6 +28,9 @@ jobs:
         VERSION: v1
       run: pnpm exec playwright test deep.spec.ts
   findAll:
+    strategy:
+      matrix:
+        instance: [0, 1, 2, 3]
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -49,4 +52,5 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
           VERSION: v2
+          INSTANCE: ${{ matrix.instance }}
         run: pnpm exec playwright test deep.spec.ts
