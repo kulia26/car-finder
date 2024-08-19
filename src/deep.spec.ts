@@ -37,7 +37,7 @@ test('find cars', async ({ page }) => {
 
   const step = INSTANCE === -1 ? 1 : 4;
 
-  for (let i = INSTANCE; i <= pagesCount; i = i + step) {
+  for (let i = INSTANCE === -1 ? 0 : INSTANCE; i <= pagesCount; i = i + step) {
     const carsToSend: Array<Car> = [];
     await page.goto(getCarsListPageUrl(i));
     const cars = await page.locator('.ticket-item').all();
