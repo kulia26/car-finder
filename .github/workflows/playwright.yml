@@ -2,10 +2,11 @@ name: Find Card
 on:
   workflow_dispatch:
   schedule:
-    - cron: "11 6,13,19 * * *"
+    - cron: "13 6,13,19 * * *"
 jobs:
   find:
     strategy:
+      fail-fast: false
       matrix:
         instance: [ 0, 1, 2, 3 ]
     timeout-minutes: 60
@@ -33,6 +34,7 @@ jobs:
       run: pnpm exec playwright test deep.spec.ts
   findAll:
     strategy:
+      fail-fast: false
       matrix:
         instance: [0, 1, 2, 3]
     timeout-minutes: 60
