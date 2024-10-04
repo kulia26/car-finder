@@ -1,4 +1,4 @@
-name: Find Card 2
+name: Find Card All
 on:
   workflow_dispatch:
   schedule:
