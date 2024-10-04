@@ -1,0 +1,34 @@
+name: Find Card City
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "11 6,13,19 * * *"
+jobs:
+  find:
+    strategy:
+      fail-fast: false
+      matrix:
+        instance: [ 0, 1, 2, 3, 4 ]
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: pnpm/action-setup@v2
+      name: Install pnpm
+      id: pnpm-install
+      with:
+        version: 8
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 20
+        cache: 'pnpm'
+    - name: Install dependencies
+      run: pnpm install
+    - name: Install Playwright Browsers
+      run: pnpm exec playwright install --with-deps chromium
+    - name: Run Playwright - find cars
+      env:
+        WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+        VERSION: v1
+        INSTANCE: ${{ matrix.instance }}
+      run: pnpm exec playwright test deep.spec.ts
