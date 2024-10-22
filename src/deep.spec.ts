@@ -9,7 +9,7 @@ const toPagePercentage = parseInt(process.env.TO || '100');
 console.log('Starting version: ', VERSION);
 // only one city (old)
 const getUrlV1 = (page = 0) => {
-  return `https://auto.ria.com/uk/search/?indexName=auto,order_auto,newauto_search&categories.main.id=1&country.import.usa.not=-1&region.id[0]=10&price.USD.lte=12000&price.currency=1&abroad.not=0&custom.not=1&page=${page}&size=100`;
+  return `https://auto.ria.com/uk/search/?indexName=auto,order_auto,newauto_search&categories.main.id=1&country.import.usa.not=-1&region.id[0]=10&price.USD.gte=1000&price.USD.lte=12000&price.currency=1&sort[0].order=price.asc&abroad.not=0&custom.not=1&page=${page}&size=100`;
 };
 
 const getUrlV2 = (page = 0) => {
