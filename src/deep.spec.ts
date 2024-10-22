@@ -4,6 +4,8 @@ require('dotenv').config();
 
 const VERSION = process.env.VERSION || 'v1';
 const INSTANCE = parseInt(process.env.INSTANCE || '-1');
+const fromPagePercentage = parseInt(process.env.FROM || '0');
+const toPagePercentage = parseInt(process.env.TO || '100');
 console.log('Starting version: ', VERSION);
 // only one city (old)
 const getUrlV1 = (page = 0) => {
@@ -37,8 +39,10 @@ test('find cars', async ({ page }) => {
   const pagesCount = Math.floor(resultsCount / 100);
 
   const step = INSTANCE === -1 ? 1 : 4;
-  const start = INSTANCE === -1 ? 0 : INSTANCE;
-  const finish = pagesCount;
+
+  const offset = Math.round((fromPagePercentage * pagesCount) / 100);
+  const finish = Math.round((toPagePercentage * pagesCount) / 100);
+  const start = (INSTANCE === -1 ? 0 : INSTANCE) + offset;
 
   for (let i = start; i <= finish; i = i + step) {
     const carsToSend: Array<Car> = [];
