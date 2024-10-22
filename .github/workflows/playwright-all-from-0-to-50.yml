@@ -1,4 +1,4 @@
-name: Find Card All
+name: Find Card All - from 0 to 50
 on:
   workflow_dispatch:
   schedule:
@@ -8,7 +8,7 @@ jobs:
     uses: ./.github/workflows/playwright.yml
     with:
         from: 0
-        to: 100
+        to: 50
         version: v2
     secrets:
         WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}

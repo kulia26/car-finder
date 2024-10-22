@@ -1,0 +1,14 @@
+name: Find Card City - From 50 to 100
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "25 7,12,18 * * *" # Kyiv time at 9:25, 14:25, 20:25
+jobs:
+  findAll:
+    uses: ./.github/workflows/playwright.yml
+    with:
+      from: 33
+      to: 66
+      version: v1
+    secrets:
+      WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
