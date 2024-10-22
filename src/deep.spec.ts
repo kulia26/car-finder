@@ -37,8 +37,10 @@ test('find cars', async ({ page }) => {
   const pagesCount = Math.floor(resultsCount / 100);
 
   const step = INSTANCE === -1 ? 1 : 4;
+  const start = INSTANCE === -1 ? 0 : INSTANCE;
+  const finish = pagesCount;
 
-  for (let i = INSTANCE === -1 ? 0 : INSTANCE; i <= pagesCount; i = i + step) {
+  for (let i = start; i <= finish; i = i + step) {
     const carsToSend: Array<Car> = [];
     await page.waitForTimeout(3500 * Math.random());
     await page.goto(getCarsListPageUrl(i), { waitUntil: 'networkidle' });

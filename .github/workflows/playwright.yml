@@ -1,8 +1,19 @@
-name: Find Card All
+name: Find Cars Reusable Workflow
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: "33 6,13,19 * * *"
+  workflow_call:
+    inputs:
+      from:
+        required: true
+        type: number
+      to:
+        required: true
+        type: number
+      version:
+        required: true
+        type: string
+    secrets:
+      WEBHOOK_URL:
+        required: true
 jobs:
   findAll:
     strategy:
@@ -29,6 +40,8 @@ jobs:
       - name: Run Playwright - find cars
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
-          VERSION: v2
+          VERSION: ${{ inputs.version }}
           INSTANCE: ${{ matrix.instance }}
+          FROM: ${{ inputs.from }}
+          TO: ${{ inputs.to }}
         run: pnpm exec playwright test deep.spec.ts
