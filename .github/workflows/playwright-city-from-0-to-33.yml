@@ -1,4 +1,4 @@
-name: Find Card City - From 0 to 50
+name: Find Card City - From 0 to 33
 on:
   workflow_dispatch:
   schedule:
