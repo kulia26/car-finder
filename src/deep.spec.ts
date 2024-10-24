@@ -29,6 +29,7 @@ interface Car {
 
 test('find cars', async ({ page }) => {
   const promises: Array<Promise<any>> = [];
+  const errors = [];
 
   await page.goto(getCarsListPageUrl(), { waitUntil: 'networkidle' });
   const resultsCount = parseInt(
@@ -46,7 +47,7 @@ test('find cars', async ({ page }) => {
 
   for (let i = start; i <= finish; i = i + step) {
     const carsToSend: Array<Car> = [];
-    await page.waitForTimeout(8000 * Math.random());
+
     await page.goto(getCarsListPageUrl(i), { waitUntil: 'networkidle' });
     const cars = await page.locator('.ticket-item').all();
 
@@ -109,7 +110,11 @@ test('find cars', async ({ page }) => {
 
   console.time('sendToServer');
 
-  await Promise.allSettled(promises);
+  try {
+    await Promise.allSettled(promises);
+  } catch (e) {
+    errors.push(e);
+  }
 
   console.timeEnd('sendToServer');
 
