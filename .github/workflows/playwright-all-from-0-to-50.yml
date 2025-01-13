@@ -1,8 +1,9 @@
 name: Find Card All - from 0 to 50
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "33 6,19 * * *"
+  # schedule:
+  #   - cron: "33 6,19 * * *"
+  # disabled for now
 jobs:
   findAll:
     uses: ./.github/workflows/playwright.yml
