@@ -2,7 +2,7 @@ name: Find Card City - From 66 to 100
 on:
   workflow_dispatch:
   schedule:
-    - cron: "5 7,12 * * *" # Kyiv time at 9:25, 14:25, 20:25
+    - cron: "5 8 * * *" # Kyiv time at 9:25, 14:25, 20:25
 jobs:
   findAll:
     uses: ./.github/workflows/playwright.yml
